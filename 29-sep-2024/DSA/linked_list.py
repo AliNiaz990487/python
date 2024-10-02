@@ -1,46 +1,67 @@
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+class LinkedList:
+    class Node:
+        def __init__(self, data):
+            self.data = data
+            self.next = None
 
-def reverse_linked_list(head):
-    prev = None
-    current = head
-    while current:
-        next_node = current.next
-        current.next = prev
-        prev = current
-        current = next_node
-    return prev
+    def __init__(self, *initial_values):
+        self.head = None
+        for v in initial_values:
+            self.insert_at_head(v)
 
-def insert_at_location(head, data, position):
-    new_node = Node(data)
-    if position == 0: 
-        new_node.next = head
-        return new_node
+    def insert_at_head(self, data):
+        if self.head is None: 
+            self.head = LinkedList.Node(data)
+            return self
+        
+        new_node = LinkedList.Node(data)
+        new_node.next = self.head
+        self.head = new_node
+        return self
+
+    def insert_at_tail(self, data):
+        if self.head is None:
+            self.head = LinkedList.Node(data)
+            return self
+        
+        current = self.head
+        while current is not None:
+            tail = current
+            current = current.next
+        
+        new_node = LinkedList.Node(data)
+        tail.next = new_node
+        return self
     
-    current = head
-    count = 0
-    
-    while current and count < position - 1:
-        current = current.next
-        count += 1
-    
-    if not current: 
-        print("Position out of bounds")
-        return head
-    
-    new_node.next = current.next 
-    current.next = new_node  
-    
-    return head
+    def insert_at_postion(self, data, position):
+        if self.head is None or position == 0:
+            self.insert_at_head(data)
+            print("Warning: position is ignored becaused head is None.")
+            return self
+        
+        current = self.head
+        count = 1
+        while current is not None and count <= position:
+            position_node = current
+            current = current.next
+            count += 1
 
 
+        new_node = LinkedList.Node(data)
+        new_node.next = position_node.next
+        position_node.next = new_node
+        return self
 
-head = Node(1)
-head = insert_at_location(head, 3, 1)
-head = insert_at_location(head, 2, 1)
-new_head = reverse_linked_list(head)
-while new_head:
-    print(new_head.data, end=" ")  # 3 2 1
-    new_head = new_head.next
+
+    def print_list(self):
+        current = self.head
+        while current is not None:
+            print(current.data, end=", ")
+            current = current.next
+        print()
+
+
+linked_list = LinkedList()
+linked_list.insert_at_postion(10, 0)
+linked_list.insert_at_tail(5).insert_at_tail(12).insert_at_head(7)
+linked_list.print_list()
